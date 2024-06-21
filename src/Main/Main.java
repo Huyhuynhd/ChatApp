@@ -12,6 +12,7 @@ import event.PublicEvent;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import service.Service;
 
@@ -30,6 +31,7 @@ public class Main extends javax.swing.JFrame {
     }
     
     private void init(){
+        setIconImage(new ImageIcon(getClass().getResource("/icon/icon.png")).getImage());
         ComponentResizer com = new ComponentResizer();
         com.registerComponent(this);
         com.setMinimumSize(new Dimension(900, 500));
@@ -52,6 +54,8 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void initChat() {
                 home.setVisible(true);
+                login.setVisible(false);
+                Service.getInstance().getClient().emit("list_user", Service.getInstance().getUser().getUserID());
             }
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
@@ -129,7 +133,7 @@ public class Main extends javax.swing.JFrame {
         background.setBackground(new java.awt.Color(255, 255, 255));
 
         body.setLayout(new java.awt.CardLayout());
-        body.add(login, "card4");
+        body.add(login, "card5");
         body.setLayer(vIew_Image, javax.swing.JLayeredPane.POPUP_LAYER);
         body.add(vIew_Image, "card3");
         body.add(home, "card2");

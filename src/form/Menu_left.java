@@ -6,6 +6,11 @@ package form;
 
 import Swing.ScrollBar;
 import component.Item_People;
+import event.EventMenuLeft;
+import event.PublicEvent;
+import java.util.ArrayList;
+import java.util.List;
+import model.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -14,6 +19,7 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Menu_left extends javax.swing.JPanel {
 
+    private List<Model_User_Account> userAccount;
     /**
      * Creates new form Menu_left
      */
@@ -25,15 +31,26 @@ public class Menu_left extends javax.swing.JPanel {
     private void init(){
         sp.setVerticalScrollBar(new ScrollBar());
         menuList.setLayout(new MigLayout("fillx", "0[]0", "0[]0"));
+        userAccount = new ArrayList<>();
+        PublicEvent.getInstance().addEventMenuLeft(new EventMenuLeft() {
+            @Override
+            public void newUser(List<Model_User_Account> users) {
+                for (Model_User_Account d : users) {
+                    userAccount.add(d);
+                    menuList.add(new Item_People(d.getUserName()), "wrap");
+                    refreshMenuList();
+                }
+            }
+        });
         showMessage();
     }
     
     private void showMessage(){
         menuList.removeAll();
-        for (int i = 0; i < 20; i++) {
-            menuList.add(new Item_People("People" + i), "wrap");
-            refreshMenuList();
+        for (Model_User_Account d : userAccount) {
+            menuList.add(new Item_People(d.getUserName()), "wrap");
         }
+        refreshMenuList();
     }
     
     private void showGroup(){
@@ -78,9 +95,9 @@ public class Menu_left extends javax.swing.JPanel {
         menu.setBackground(new java.awt.Color(242, 242, 242));
         menu.setFocusable(false);
         menu.setMinimumSize(new java.awt.Dimension(60, 45));
+        menu.setOpaque(true);
         menu.setLayout(new java.awt.GridLayout(1, 3));
 
-        menuMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/message_selected.png"))); // NOI18N
         menuMessage.setDisabledIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/message.png"))); // NOI18N
         menuMessage.setDisabledSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/message.png"))); // NOI18N
         menuMessage.setMaximumSize(new java.awt.Dimension(60, 45));
@@ -152,8 +169,8 @@ public class Menu_left extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 45, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
                 .addComponent(sp, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
