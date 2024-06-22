@@ -19,7 +19,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import model.Model_Send_Message;
+import model.Model_User_Account;
 import net.miginfocom.swing.MigLayout;
+import service.Service;
 
 /**
  *
@@ -27,9 +30,16 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Chat_Bottom extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Chat_Title
-     */
+    public Model_User_Account getUser() {
+        return user;
+    }
+
+    public void setUser(Model_User_Account user) {
+        this.user = user;
+    }
+
+    private Model_User_Account user;
+
     public Chat_Bottom() {
         initComponents();
         init();
@@ -68,7 +78,9 @@ public class Chat_Bottom extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent ae) {
                 String text = txt.getText().trim();
                 if (!text.equals("")) {
-                    PublicEvent.getInstance().getEventChat().sendMessage(text);
+                    Model_Send_Message message = new Model_Send_Message(Service.getInstance().getUser().getUserID(), user.getUserID(), text);
+                    send(message);
+                    PublicEvent.getInstance().getEventChat().sendMessage(message);
                     txt.setText("");
                     txt.grabFocus();
                     refresh();
@@ -80,6 +92,11 @@ public class Chat_Bottom extends javax.swing.JPanel {
         panel.add(cmd);
         add(panel);        
     }
+    
+    private void send(Model_Send_Message data) {
+        Service.getInstance().getClient().emit("send_to_user", data.toJsonObject());
+    }
+
     
     private void refresh() {
         revalidate();

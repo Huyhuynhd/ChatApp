@@ -12,6 +12,8 @@ import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollBar;
+import model.Model_Receive_Message;
+import model.Model_Send_Message;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -49,15 +51,13 @@ public class Chat_Body extends javax.swing.JPanel {
         
     }
     
-    public void addItemLeft(String text, String user, Icon ... image){
-        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
-        item.setText(text);
-        item.setImage(image);
+   public void addItemLeft(Model_Receive_Message data) {
+        Chat_Left item = new Chat_Left();
+        item.setText(data.getText());
         item.setTime();
-        item.setUserProfile(user);
         body.add(item, "wrap, w 100::80%");
-        body.repaint();
-        body.revalidate();
+        repaint();
+        revalidate();
     }
     
     public void addItemLeft(String text, String user, String[] image){
@@ -83,13 +83,12 @@ public class Chat_Body extends javax.swing.JPanel {
         body.revalidate();
     }
     
-    public void addItemRight(String text, Icon ... image){
+    public void addItemRight(Model_Send_Message data) {
         Chat_Right item = new Chat_Right();
-        item.setText(text);
-        item.setImage(image);
+        item.setText(data.getText());
         body.add(item, "wrap, al right, w 100::80%");
-        body.repaint();
-        body.revalidate();
+        repaint();
+        revalidate();
         item.setTime();
         scrollToBottom();
     }
@@ -110,6 +109,12 @@ public class Chat_Body extends javax.swing.JPanel {
         body.add(item, "wrap, al center");
         body.repaint();
         body.revalidate();
+    }
+    
+     public void clearChat() {
+        body.removeAll();
+        repaint();
+        revalidate();
     }
     /**
      * This method is called from within the constructor to initialize the form.
